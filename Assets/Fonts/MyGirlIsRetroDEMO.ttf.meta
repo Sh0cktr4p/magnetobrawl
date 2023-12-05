@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 646eacd9bac3d794f8319a74e5e7a361
+timeCreated: 1512845202
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: My Girl Is Retro
+  fontNames:
+  - My Girl Is Retro
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
