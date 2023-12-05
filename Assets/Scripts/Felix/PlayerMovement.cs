@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,6 +64,8 @@ public class PlayerMovement : MonoBehaviour
     //General
     public int playersPerTeam = 2;
 
+    private bool keyboardControl = false;
+
     public int PlayerID
     {
         get { return playerID; }
@@ -107,6 +109,10 @@ public class PlayerMovement : MonoBehaviour
         rVertical = "VR" + playerID;
         triggers = "T" + playerID;
         magnet = "M" + playerID;
+
+        if (Input.GetJoystickNames().Length == 0) {
+            keyboardControl = true;
+        }
 
         state = PlayerState.moving;
         ballDocked = false;
@@ -242,10 +248,25 @@ public class PlayerMovement : MonoBehaviour
                 speed); // * Time.deltaTime;
 
         //Set rotation
-        if (hRInput != 0 || vRInput != 0)
-            transform.rotation = Quaternion.Lerp(transform.rotation,
-                Quaternion.AngleAxis(Mathf.Atan2(vRInput, hRInput) * 180 / Mathf.PI, Vector3.forward),
-                Time.deltaTime * 10);
+        if (keyboardControl && playerID == 0) {
+            Vector3 dir = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position);
+            Vector2 dir2 = new Vector2(dir.x, dir.y).normalized;
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation,
+                Quaternion.AngleAxis(
+                    Mathf.Atan2(dir2.y, dir2.x) * 180 / Mathf.PI,
+                    Vector3.forward
+                ),
+                Time.deltaTime * 100
+            );
+
+        }
+        else {
+            if (hRInput != 0 || vRInput != 0)
+                transform.rotation = Quaternion.Lerp(transform.rotation,
+                    Quaternion.AngleAxis(Mathf.Atan2(vRInput, hRInput) * 180 / Mathf.PI, Vector3.forward),
+                    Time.deltaTime * 10);
+        }
         //Set ball attraction
         if (tInput > 0 && !ballDocked)
         {
@@ -291,7 +312,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-        else if (tInput < 0 && ballDocked)
+        else if ((keyboardControl && playerID == 0 && Input.GetMouseButton(0) || tInput < 0) && ballDocked)
         {
             //Ball shooting; 
             dockedBall.team = playerID / playersPerTeam;
